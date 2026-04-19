@@ -240,6 +240,23 @@ function drawSpike(obs) {
   ctx.fill();
 }
 
+// ── Rounded rect polyfill ─────────────────────────────────────
+function fillRRect(x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+  ctx.fill();
+}
+
 // ── Draw Spider-Kid character ──────────────────────────────────
 function drawSpiderKid(p, t) {
   const x = p.x;
@@ -295,18 +312,12 @@ function drawSpiderKid(p, t) {
   // ── Body (Spider-Man suit) ───────────────────────────────────
   // Main body - red
   ctx.fillStyle = '#cc0000';
-  ctx.beginPath();
-  ctx.roundRect(cx - 14, y - 52, 28, 34, 6);
-  ctx.fill();
+  fillRRect(cx - 14, y - 52, 28, 34, 6);
 
   // Blue panels on sides
   ctx.fillStyle = '#1a3fa8';
-  ctx.beginPath();
-  ctx.roundRect(cx - 14, y - 52, 7, 34, [6, 0, 0, 6]);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.roundRect(cx + 7, y - 52, 7, 34, [0, 6, 6, 0]);
-  ctx.fill();
+  fillRRect(cx - 14, y - 52, 7, 34, 4);
+  fillRRect(cx + 7,  y - 52, 7, 34, 4);
 
   // Web lines on body
   ctx.strokeStyle = 'rgba(0,0,0,0.35)';
